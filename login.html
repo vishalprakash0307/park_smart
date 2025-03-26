@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Park Smart | Login & Signup</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e40af);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 15px;
+      width: 370px;
+      color: #fff;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      transition: 0.3s;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #3b82f6;
+      border-radius: 6px;
+      background: transparent;
+      color: white;
+      outline: none;
+    }
+
+    .form-group label {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      background: #0f172a;
+      padding: 0 5px;
+      color: #9ca3af;
+      pointer-events: none;
+      transition: 0.3s ease;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label {
+      top: -10px;
+      font-size: 12px;
+      color: #60a5fa;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #2563eb;
+    }
+
+    .switch-form {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .switch-form a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .switch-form a:hover {
+      text-decoration: underline;
+    }
+
+    #signupForm {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <form id="loginForm" action="/login" method="POST">
+      <h2>🚗 Park Smart Login</h2>
+
+      <div class="form-group">
+        <input type="email" name="email" required placeholder=" ">
+        <label>Email</label>
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" required placeholder=" ">
+        <label>Password</label>
+      </div>
+
+      <button type="submit" class="btn">Login</button>
+
+      <div class="switch-form">
+        Don't have an account? <a href="#" onclick="toggleForm('signup')">Sign up</a>
+      </div>
+    </form>
+
+    <form id="signupForm" action="/signup" method="POST">
+      <h2>📝 Create Account</h2>
+
+      <div class="form-group">
+        <input type="text" name="name" required placeholder=" ">
+        <label>Full Name</label>
+      </div>
+
+      <div class="form-group">
+        <input type="email" name="email" required placeholder=" ">
+        <label>Email</label>
+      </div>
+
+      <div class="form-group">
+        <input type="text" name="phone" required placeholder=" ">
+        <label>Phone Number</label>
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" required placeholder=" ">
+        <label>Password</label>
+      </div>
+
+      <button type="submit" class="btn">Sign Up</button>
+
+      <div class="switch-form">
+        Already have an account? <a href="#" onclick="toggleForm('login')">Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleForm(form) {
+      document.getElementById('loginForm').style.display = (form === 'login') ? 'block' : 'none';
+      document.getElementById('signupForm').style.display = (form === 'signup') ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

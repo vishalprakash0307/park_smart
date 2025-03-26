@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Chatbot | Park Smart</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #d7e1ec, #f7f9fc);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .chat-container {
+      width: 420px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background-color: #2d89ef;
+      color: white;
+      padding: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat-messages {
+      padding: 16px;
+      height: 350px;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    .bot {
+      color: #2d89ef;
+    }
+
+    .user {
+      text-align: right;
+      color: #333;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      outline: none;
+    }
+
+    .chat-input button {
+      background-color: #2d89ef;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mic-button {
+      background-color: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .mic-button:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">Park Smart Assistant 🚗</div>
+  <div class="chat-messages" id="chat">
+    <div class="message bot">👋 Hi! Ask me about nearby parking, fuel, or EV stations.</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+    <button class="mic-button" onclick="startVoice()">🎙️</button>
+  </div>
+</div>
+
+<script>
+  const chat = document.getElementById("chat");
+
+  const responses = {
+    fuel: "Nearby fuel stations are HP Petroleum and Bharat Petroleum.",
+    ev: "Nearby EV charging stations include Main EV Station and Thoothukudi EV Hub.",
+    parking: "Available parking locations include Mani Parking, Bus Stand, and Mall Parking.",
+    hello: "Hello! I'm your Park Smart assistant. Ask me about nearby fuel, EV stations, or parking.",
+    default: "I'm sorry, I didn't understand that. Try asking about fuel, EV station, or parking."
+  };
+
+  function addMessage(sender, text) {
+    const msg = document.createElement("div");
+    msg.className = `message ${sender}`;
+    msg.textContent = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      synth.cancel(); // Stop any current speaking
+      synth.speak(utter);
+    } else {
+      console.log("Speech Synthesis not supported");
+    }
+  }
+
+  function getResponse(input) {
+    input = input.toLowerCase();
+    if (input.includes("fuel")) return responses.fuel;
+    if (input.includes("ev") || input.includes("charging")) return responses.ev;
+    if (input.includes("parking")) return responses.parking;
+    if (input.includes("hello") || input.includes("hi")) return responses.hello;
+    return responses.default;
+  }
+
+  function sendMessage() {
+    const input = document.getElementById("userInput");
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    addMessage("user", userText);
+    input.value = "";
+
+    const botReply = getResponse(userText);
+    setTimeout(() => {
+      addMessage("bot", botReply);
+      speak(botReply); // VOICE OUTPUT
+    }, 400);
+  }
+
+  document.getElementById("userInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  function startVoice() {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      alert("Your browser does not support Speech Recognition. Please use Chrome.");
+      return;
+    }
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.start();
+
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById("userInput").value = transcript;
+      sendMessage();
+    };
+
+    recognition.onerror = function(event) {
+      alert("Voice recognition error: " + event.error);
+    };
+  }
+</script>
+
+</body>
+</html>
